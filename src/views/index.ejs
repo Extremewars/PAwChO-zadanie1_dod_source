@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Aplikacja pogodowa</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+    <script>
+      const countryMap = <%- JSON.stringify(countryMap) %>;
+
+      function updateCities() {
+        const country = document.getElementById('country').value;
+        const citySelect = document.getElementById('city');
+        citySelect.innerHTML = '';
+
+        if (countryMap[country]) {
+          countryMap[country].forEach(city => {
+            const option = document.createElement('option');
+            option.value = city;
+            option.textContent = city;
+            citySelect.appendChild(option);
+          });
+        }
+      }
+    </script>
+  </head>
+  <body onload="updateCities()">
+    <div class="container">
+      <fieldset>
+        <form action="/" method="post">
+          <label>Wybierz kraj:</label>
+          <select name="country" id="country" onchange="updateCities()" class="ghost-input" required>
+            <% Object.keys(countryMap).forEach(function(country) { %>
+              <option value="<%= country %>"><%= country %></option>
+            <% }) %>
+          </select>
+
+          <label>Wybierz miasto:</label>
+          <select name="city" id="city" class="ghost-input" required></select>
+
+          <input type="submit" class="ghost-button" value="Get Weather">
+        </form>
+
+        <% if(weather !== null) { %>
+          <p><%= weather %></p>
+        <% } %>
+
+        <% if(error !== null) { %>
+          <p><%= error %></p>
+        <% } %>
+      </fieldset>
+    </div>
+  </body>
+</html>
